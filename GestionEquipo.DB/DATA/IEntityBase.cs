@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace GestionEquipo.DB.DATA
 {
-    public class EntityBase: IEntityBase
-    {
-        public int ID { get; set; }
+    public interface IEntityBase
+    { 
+        int ID { get; set; }
     }
 }
