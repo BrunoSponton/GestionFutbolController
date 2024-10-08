@@ -1,4 +1,4 @@
-﻿using GestionEquipo.DB.DATA;
+﻿ using GestionEquipo.DB.DATA;
 
 namespace GestionEquipo.Server.Repositorio
 {

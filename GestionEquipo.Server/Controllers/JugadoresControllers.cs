@@ -4,7 +4,7 @@ using GestionEquipo.DB.DATA.ENTITY;
 using GestionEquipo.Server.Repositorio;
 using GestionEquipo.Shared.DTO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;  
 
 namespace GestionEquipo.Server.Controllers
 {
@@ -23,13 +23,16 @@ namespace GestionEquipo.Server.Controllers
             this.mapper = mapper;
             this.context = context;
         }
-        [HttpGet]    //api/Jugadores
-        public async Task<ActionResult<List<Jugador>>> Get()
-        {
-            return await repositorio.Select();
-        }
 
-        [HttpGet("{ID:int}")] //api/Jugadores/2
+        //GET: --------------------------------------------------------------
+
+        //[HttpGet]    
+        //public async Task<ActionResult<List<Jugador>>> Get()
+        //{
+        //    return await repositorio.Select();
+        //}
+
+        [HttpGet("{ID:int}")] 
         public async Task<ActionResult<Jugador>>Get(int ID)
         {
             var jugador = await repositorio.SelectById(ID);
@@ -41,14 +44,14 @@ namespace GestionEquipo.Server.Controllers
             return jugador;
         }
 
-        [HttpGet("Existe/{ID:int}")] //api/Jugadores/existe
-        public async Task<ActionResult<bool>> Existe(int ID)
-        {
-            var existe = await repositorio.Existe(ID);
-                return existe;
-        }
+        //[HttpGet("Existe/{ID:int}")]
+        //public async Task<ActionResult<bool>> Existe(int ID)
+        //{
+        //    var existe = await repositorio.Existe(ID);
+        //    return existe;
+        //}
 
-        [HttpGet("{Nombre}")] //api/Jugadores/Nombre
+        [HttpGet("{Nombre}")] 
         public async Task<ActionResult<Jugador>> GetbyCod(string Nombre)
         {
             var jugador = await context.Jugadores.FirstOrDefaultAsync(x => x.Nombre==Nombre);
@@ -60,20 +63,22 @@ namespace GestionEquipo.Server.Controllers
             return jugador;
         }
 
+        //POST: -------------------------------------------------------------
 
-        [HttpPost]
-        public async Task<ActionResult<int>>Post(Jugador entidad)
-        {
-            try
-            {
-                return await repositorio.Insert(entidad);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-        //DTO
+        //[HttpPost]
+        //public async Task<ActionResult<int>>Post(Jugador entidad)
+        //{
+        //    try
+        //    {
+        //        return await repositorio.Insert(entidad);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
+
+        //DTO:
         [HttpPost]
         public async Task<ActionResult<int>> Post(CrearJugadorDTO entidadDTO)
         {
@@ -95,7 +100,33 @@ namespace GestionEquipo.Server.Controllers
             }
         }
 
-        [HttpPut("{ID:int}")]  //api/Jugadores/2
+        [HttpPost("Confirmacion")]
+        public async Task<ActionResult<string>> ConfirmacionAgregarJugador(CrearJugadorDTO entidadDTO)
+        {
+            try
+            {
+                Jugador entidad = mapper.Map<Jugador>(entidadDTO);
+                int resultado = await repositorio.Insert(entidad);
+
+                if (resultado > 0)
+                {
+                    return Ok($"El jugador {entidad.Nombre} fue agregado exitosamente con ID {resultado}");
+                }
+                else
+                {
+                    return BadRequest("No se pudo agregar el jugador. Inténtalo de nuevo.");
+                }
+            }
+            catch (Exception err)
+            {
+                return BadRequest($"Error: {err.Message}");
+            }
+        }
+
+
+        //PUT: ----------------------------------------------------------------
+
+        [HttpPut("{ID:int}")]  
         public async Task<ActionResult> Put(int ID, [FromBody] Jugador entidad) 
         {
             if (ID != entidad.ID)
@@ -123,7 +154,10 @@ namespace GestionEquipo.Server.Controllers
                 return BadRequest(e.Message);
             }
         }
-        [HttpDelete("{ID:int}")] //api/Jugadores/2
+
+        //DELETE: ------------------------------------------------------------------
+
+        [HttpDelete("{ID:int}")] 
         public async Task<ActionResult> Delete(int ID)
         {
             var existe = await repositorio.Existe(ID);

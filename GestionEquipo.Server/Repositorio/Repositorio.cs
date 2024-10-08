@@ -37,7 +37,7 @@ namespace GestionEquipo.Server.Repositorio
             return await context.Set<E>().ToListAsync();
         }
 
-        [HttpPost]
+        
         public async Task<int> Insert(E entidad)
         {
             try
